@@ -33,18 +33,18 @@ SynthDef.new(\t, {
 	face3 = Out.ar(10,PanAz.ar(3,InFeedback.ar(3),LFSaw.ar(),level:env,width:2));
 	face4 = Out.ar(13,PanAz.ar(3,InFeedback.ar(3),LFSaw.ar(),level:env,width:2));
 
-	edge1a = Out.ar(16,Pan2.ar(InFeedback.ar(4),LFSaw.ar(),level:env,width:2));
-	edge1b = Out.ar(18,Pan2.ar(InFeedback.ar(5),LFSaw.ar(),level:env,width:2));
-	edge1c = Out.ar(20,Pan2.ar(InFeedback.ar(6),LFSaw.ar(),level:env,width:2));
-	edge2a = Out.ar(22,Pan2.ar(InFeedback.ar(7),LFSaw.ar(),level:env,width:2));
-	edge2b = Out.ar(24,Pan2.ar(InFeedback.ar(8),LFSaw.ar(),level:env,width:2));
-	edge2c = Out.ar(26,Pan2.ar(InFeedback.ar(9),LFSaw.ar(),level:env,width:2));
-	edge3a = Out.ar(27,Pan2.ar(InFeedback.ar(10),LFSaw.ar(),level:env,width:2));
-	edge3b = Out.ar(29,Pan2.ar(InFeedback.ar(11),LFSaw.ar(),level:env,width:2));
-	edge3c = Out.ar(30,Pan2.ar(InFeedback.ar(12),LFSaw.ar(),level:env,width:2));
-	edge4a = Out.ar(32,Pan2.ar(InFeedback.ar(13),LFSaw.ar(),level:env,width:2));
-	edge4b = Out.ar(34,Pan2.ar(InFeedback.ar(14),LFSaw.ar(),level:env,width:2));
-	edge4c = Out.ar(36,Pan2.ar(InFeedback.ar(15),LFSaw.ar(),level:env,width:2));
+	edge1a = Out.ar(16,Pan2.ar(InFeedback.ar(4),LFSaw.ar(),level:env));
+	edge1b = Out.ar(18,Pan2.ar(InFeedback.ar(5),LFSaw.ar(),level:env));
+	edge1c = Out.ar(20,Pan2.ar(InFeedback.ar(6),LFSaw.ar(),level:env));
+	edge2a = Out.ar(22,Pan2.ar(InFeedback.ar(7),LFSaw.ar(),level:env));
+	edge2b = Out.ar(24,Pan2.ar(InFeedback.ar(8),LFSaw.ar(),level:env));
+	edge2c = Out.ar(26,Pan2.ar(InFeedback.ar(9),LFSaw.ar(),level:env));
+	edge3a = Out.ar(27,Pan2.ar(InFeedback.ar(10),LFSaw.ar(),level:env));
+	edge3b = Out.ar(29,Pan2.ar(InFeedback.ar(11),LFSaw.ar(),level:env));
+	edge3c = Out.ar(30,Pan2.ar(InFeedback.ar(12),LFSaw.ar(),level:env));
+	edge4a = Out.ar(32,Pan2.ar(InFeedback.ar(13),LFSaw.ar(),level:env));
+	edge4b = Out.ar(34,Pan2.ar(InFeedback.ar(14),LFSaw.ar(),level:env));
+	edge4c = Out.ar(36,Pan2.ar(InFeedback.ar(15),LFSaw.ar(),level:env));
 
 
 }).add;
