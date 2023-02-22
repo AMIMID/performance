@@ -39,7 +39,6 @@ s.sampleRate
 ~a.query
 
 ///sampler
-(
 ~o=(
 SynthDef.new(\o1, {arg note1,time1,time2,presence1, presence2;
 	var osc1,osc2, env1,env2, note2, a;
@@ -174,11 +173,23 @@ MIDIIn.connectAll;
 ~data=127;
 ~modul=127;
 
+~o=(
+SynthDef.new(\o1, {arg note1,time1=4,time2=8,presence1, presence2;
+	var osc1,osc2, env1,env2, note2, a;
+
+	a= (~a.numFrames - note1).wrap(1,~a.numFrames); note2= (~a.numFrames/(note1+a)).wrap(1,~a.numFrames);
+	env1 = EnvGen.ar(Env.perc(0.02,time1,presence1), doneAction: 0); env2 = EnvGen.ar(Env.perc(0.02,time2,presence2), doneAction: 2);
+	osc1 = PlayBuf.ar(2,0,BufRateScale.kr(0),startPos:note1); osc2 = PlayBuf.ar(2,0,BufRateScale.kr(0),startPos:note2);
+	Out.ar(0,osc1*env1); Out.ar(0,osc2*env2);
+}).add;
+);
 /////
 
 MIDIdef.noteOn(\synhtone,{|val,num,chan,src|[val,num,chan,src].postln;
-	~note[num]=a=Synth.new(\synth,[\gate,1,\fre,num.midicps,
-		\velosity,val.linlin(1,127,0.2,0.9),\bend, ~bend.linlin(0,16383,-5,6),\cutoff,~data.linlin(1,127,10,10000),\pha,~modul.linlin(1,127,0.03,3),\amp,~modul.linlin(0,127,0.03,3)]);
+	~note[num]=a=Synth.new(\o1,[\note1,num.midicps, ,\velosity,val.linlin(1,127,0.2,0.9),\bend,
+		~bend.linlin(0,16383,-5,6,cutoff,
+		~data.linlin(1,127,10,10000),\pha,
+		~modul.linlin(1,127,0.03,3),\amp,~modul.linlin(0,127,0.03,3)]);
 });
 
 MIDIdef.noteOff(\synthone,{|val,num|~note[num].set(\gate,0);~note[num]=nil;
