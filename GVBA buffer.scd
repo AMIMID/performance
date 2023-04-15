@@ -19,10 +19,15 @@ s.options.memSize = 8192*8;
 s.waitForBoot
 s.reboot;
 
-~e1 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230414_231331.wav",channels:0);
-~e2 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230414_231331.wav",channels:1);
-~e3 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230414_231331.wav",channels:2);
-~e4 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230414_231331.wav",channels:3);
+~e1 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230415_180211.wav",channels:0);
+~e2 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230415_180211.wav",channels:1);
+~e3 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230415_180211.wav",channels:2);
+~e4 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_230415_180211.wav",channels:3);
+
+~e1 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Dokuments/PROJECT  FILES/Suco/lam/audio files/RECORDING2.wav",channels:0);
+~e2 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Dokuments/PROJECT  FILES/Suco/lam/audio files/RECORDING2.wav",channels:1);
+~e3 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Dokuments/PROJECT  FILES/Suco/lam/audio files/RECORDING2.wav",channels:2);
+~e4 = Buffer.readChannel(s,"/Users/petrostatsiopoulos/Dokuments/PROJECT  FILES/Suco/lam/audio files/RECORDING2.wav",channels:3);
 
 
 (
@@ -47,30 +52,30 @@ SynthDef.new(\t, {
 	//azimuth2 = Out.ar(5,Pan2.ar(LeakDC.ar(PlayBuf.ar(1,1,BufRateScale.kr(0),inf)),pos:MouseY.kr(-1,1)));
 	/////////////////////////////////////////////////////////
 
-	face1 = Out.ar(7,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,0,BufRateScale.kr(0),loop:inf)),SinOsc.ar(3/4),width:2));
+	face1 = Out.ar(7,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,0,BufRateScale.kr(0),loop:inf)),SinOsc.ar(1/2),width:2));
 
-	face2 = Out.ar(10,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,1,BufRateScale.kr(1),loop:inf)),SinOsc.ar(3/4),width:2));
+	face2 = Out.ar(10,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,1,BufRateScale.kr(1),loop:inf)),SinOsc.ar(1/2),width:2));
 
-	face3 = Out.ar(14,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,2,BufRateScale.kr(2),loop:inf)),SinOsc.ar(3/4),width:2));
+	face3 = Out.ar(14,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,2,BufRateScale.kr(2),loop:inf)),SinOsc.ar(1/2),width:2));
 
-	face4 = Out.ar(17,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,3,BufRateScale.kr(3),loop:inf)),SinOsc.ar(3/4),width:2));
+	face4 = Out.ar(17,PanAz.ar(3,LeakDC.ar(PlayBuf.ar(1,3,BufRateScale.kr(3),loop:inf)),SinOsc.ar(1/2),width:2));
 ///////////////////////////////////////////////////////////////////////////////
 
-	edge1a = Out.ar(19,Pan2.ar(InFeedback.ar(7),SinOsc.ar(3/4)));
-	edge1b = Out.ar(21,Pan2.ar(InFeedback.ar(8),SinOsc.ar(3/4)));
-	edge1c = Out.ar(23,Pan2.ar(InFeedback.ar(9),SinOsc.ar(3/4)));
+	edge1a = Out.ar(19,Pan2.ar(InFeedback.ar(7),SinOsc.ar(1/2)));
+	edge1b = Out.ar(21,Pan2.ar(InFeedback.ar(8),SinOsc.ar(1/2)));
+	edge1c = Out.ar(23,Pan2.ar(InFeedback.ar(9),SinOsc.ar(1/2)));
 
-	edge2a = Out.ar(25,Pan2.ar(InFeedback.ar(10),SinOsc.ar(3/4)));
-	edge2b = Out.ar(27,Pan2.ar(InFeedback.ar(11),SinOsc.ar(3/4)));
-	edge2c = Out.ar(29,Pan2.ar(InFeedback.ar(12),SinOsc.ar(3/4)));
+	edge2a = Out.ar(25,Pan2.ar(InFeedback.ar(10),SinOsc.ar(1/2)));
+	edge2b = Out.ar(27,Pan2.ar(InFeedback.ar(11),SinOsc.ar(1/2)));
+	edge2c = Out.ar(29,Pan2.ar(InFeedback.ar(12),SinOsc.ar(1/2)));
 
-	edge3a = Out.ar(31,Pan2.ar(InFeedback.ar(13),SinOsc.ar(3/4)));
-	edge3b = Out.ar(33,Pan2.ar(InFeedback.ar(14),SinOsc.ar(3/4)));
-	edge3c = Out.ar(35,Pan2.ar(InFeedback.ar(15),SinOsc.ar(3/4)));
+	edge3a = Out.ar(31,Pan2.ar(InFeedback.ar(13),SinOsc.ar(1/2)));
+	edge3b = Out.ar(33,Pan2.ar(InFeedback.ar(14),SinOsc.ar(1/2)));
+	edge3c = Out.ar(35,Pan2.ar(InFeedback.ar(15),SinOsc.ar(1/2)));
 
-	edge4a = Out.ar(37,Pan2.ar(InFeedback.ar(16),SinOsc.ar(3/4)));
-	edge4b = Out.ar(39,Pan2.ar(InFeedback.ar(17),SinOsc.ar(3/4)));
-	edge4c = Out.ar(41,Pan2.ar(InFeedback.ar(18),SinOsc.ar(3/4)));
+	edge4a = Out.ar(37,Pan2.ar(InFeedback.ar(16),SinOsc.ar(1/2)));
+	edge4b = Out.ar(39,Pan2.ar(InFeedback.ar(17),SinOsc.ar(1/2)));
+	edge4c = Out.ar(41,Pan2.ar(InFeedback.ar(18),SinOsc.ar(1/2)));
 
 ////////////////////////////////////////////////////////////////////////////
 
