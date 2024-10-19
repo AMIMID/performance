@@ -14,8 +14,8 @@ s.waitForBoot
 Buffer.freeAll
 
 (
-~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_241019_134137.wav");
-~c2 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_241019_142714.wav");
+~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/inst-4/piknotites5/SC_241019_202427.wav");
+~c2 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/recordings from mics/SC_241019_234440.wav");
 )
 
 (
@@ -35,30 +35,44 @@ sig2b=FreeVerb.ar(LPF.ar(PlayBuf.ar(4, ~c2.bufnum, BufRateScale.kr(~c2), loop: 1
 }).add;
 (
 Window.closeAll;
-w=Window.new("gui",Rect.new(750,100,600,300)).front.alwaysOnTop_(true);
+w=Window.new("gui",Rect.new(750,100,500,420)).front.alwaysOnTop_(true);
 
 ~gain1 = Slider.new(w.view,Rect.new(20,20,160,30));
 
 ~gain2 = Slider.new(w.view,Rect.new(20,60,160,30));
 
-~filter1 = Slider2D.new(w.view,Rect.new(20,100,160,30));
+~filter1 = Slider2D.new(w.view,Rect.new(20,100,200,200));
 
-~filter2 = RangeSlider.new(w.view,Rect.new(20,140,160,30));
+~filter2 = Slider2D.new(w.view,Rect.new(240,100,200,200));
 
-~reverb1 = Slider.new(w.view,Rect.new(200,20,160,30));
+~reverb1 = Slider.new(w.view,Rect.new(250,20,160,30));
 
-~reverb2 = Slider.new(w.view,Rect.new(200,60,160,30));
+~reverb2 = Slider.new(w.view,Rect.new(250,60,160,30));
 
-~on = Button(w,Rect(80,260,40,40)).states_([
+~on = Button(w,Rect(80,350,40,40)).states_([
 	["off",Color.black],Color.gray,["on",Color.white,Color.gray]]).action_({
 	arg obj;
 	if(
 		obj.value==1,{~synth=Synth.new(\inst4,[
 \gain1,~gain1.value,\gain2,~gain2.value,\mix1,~reverb1.value,\mix2,~reverb2.value,
-\lowpass1,~filter1.lo.linexp(0,1,20,20000),\highpass1,~filter1.hi.linexp(0,1,20,20000),
-	\lowpass2,~filter2.lo.linexp(0,1,20,20000),\highpass2,~filter2.hi.linexp(0,1,20,20000)]).register;},
+\lowpass1,~filter1.y.linexp(0,1,20,20000),\highpass1,~filter1.x.linexp(0,1,20,20000),
+	\lowpass2,~filter2.y.linexp(0,1,20,20000),\highpass2,~filter2.x.linexp(0,1,20,20000)]).register;},
 		{~synth.free}
-)})
+)});
+(
+a = StaticText(w, Rect(190,20,100, 20));
+a.string = "gain1";
+b = StaticText(w, Rect(190,60,100, 20));
+b.string = "gain2";
+c = StaticText(w, Rect(20,300,200, 20));
+c.string = "lowpass1 X highpass1";
+d = StaticText(w, Rect(240,300,200, 20));
+d.string = "lowpass2 X highpass2";
+e = StaticText(w, Rect(420,20,200, 20));
+e.string = "reverb1";
+f = StaticText(w, Rect(420,60,200, 20));
+f.string = "reverb2";
+)
 );
 
 (
@@ -98,41 +112,26 @@ w=Window.new("gui",Rect.new(750,100,600,300)).front.alwaysOnTop_(true);
 });
 );
 (
-~filter1.lo_(0).hi_(1).action_({
+~filter1.x_(0).y_(0).action_({
 	arg obj;
 	var lowpass,highpass;
-	lowpass=obj.lo.linexp(0,1,20,20000);
-	highpass=obj.hi.linexp(0,1,20,20000);
-	lowpass.value.postln;
-	highpass.value.postln;
+	lowpass=obj.y.linexp(0,1,20,20000);
+	highpass=obj.x.linexp(0,1,20,20000);
+	[lowpass.value,highpass.value].postln;
 	if(~synth.isPlaying,{~synth.set(\lowpass1,lowpass,\highpass1,highpass)});
 });
 );
 (
-~filter2.lo_(0).hi_(1).action_({
+~filter2.x_(0).y_(0).action_({
 	arg obj;
 	var lowpass,highpass;
-	lowpass=obj.lo.linexp(0,1,20,20000);
-	highpass=obj.hi.linexp(0,1,20,20000);
-	lowpass.value.postln;
-	highpass.value.postln;
+	lowpass=obj.y.linexp(0,1,20,20000);
+	highpass=obj.x.linexp(0,1,20,20000);
+	[lowpass.value,highpass.value].postln;
 	if(~synth.isPlaying,{~synth.set(\lowpass2,lowpass,\highpass2,highpass)});
 });
 );
-(
-a = StaticText(w, Rect(190,20,100, 20));
-a.string = "gain1";
-b = StaticText(w, Rect(190,60,100, 20));
-b.string = "gain2";
-c = StaticText(w, Rect(190,100,200, 20));
-c.string = "lowpass1 | highpass1";
-d = StaticText(w, Rect(190,140,200, 20));
-d.string = "lowpass2 | highpass2";
-e = StaticText(w, Rect(400,20,200, 20));
-e.string = "reverb1";
-f = StaticText(w, Rect(400,60,200, 20));
-f.string = "reverb2";
-);
+
 )
 s.record(numChannels:4)
 
