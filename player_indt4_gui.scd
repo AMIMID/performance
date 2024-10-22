@@ -14,23 +14,27 @@ s.waitForBoot
 Buffer.freeAll
 
 (
-~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/inst-4/piknotites5/SC_241019_202427.wav");
-~c2 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/recordings from mics/SC_241019_234440.wav");
+~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/inst-4/piknotites6/SC_241022_083125.wav");
+~c2 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/inst-4/piknotites6/SC_241022_083125.wav");
 )
 
 (
 SynthDef.new(\inst4,
 {
-		arg lowpass1=440,highpass1=440,lowpass2=440,highpass2=440,gain1=1,gain2=1,mix1=1,mix2=1;
-		var sig1a,sig2a,sig1b,sig2b;
+		arg lowpass1=440,highpass1=440,pass1=440,pass2=440,gain1=1,gain2=1,mix1=1,mix2=1,width1=1,width2=1;
+		var sig1,sig2;
 
-sig1a=FreeVerb.ar(HPF.ar(PlayBuf.ar(4, ~c1.bufnum, BufRateScale.kr(~c1), loop: 0, doneAction:0),highpass1.lag(0.333),gain1.lag(0.333)),mix:mix1.lag(0.333),room:1);
-sig1b=FreeVerb.ar(LPF.ar(PlayBuf.ar(4, ~c1.bufnum, BufRateScale.kr(~c1), loop: 0, doneAction:0),lowpass1.lag(0.333),gain1.lag(0.333)),mix:mix1.lag(0.333),room:1);
-sig2a=FreeVerb.ar(HPF.ar(PlayBuf.ar(4, ~c2.bufnum, BufRateScale.kr(~c2), loop: 1, doneAction:0),highpass2.lag(0.333),gain2.lag(0.333)),mix:mix2.lag(0.333),room:0.5);
-sig2b=FreeVerb.ar(LPF.ar(PlayBuf.ar(4, ~c2.bufnum, BufRateScale.kr(~c2), loop: 1, doneAction:0),lowpass2.lag(0.333),gain2.lag(0.333)),mix:mix2.lag(0.333),room:0.5);
+sig1=FreeVerb.ar(BPF.ar
+			(PlayBuf.ar(4, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 0, doneAction:0),
+				freq:pass1.lag(0.333),rq:width1.lag(0.333),mul:gain1.lag(0.333)),
+			mix:mix1.lag(0.333),room:1,mul:1/width1.sqrt);
 
-	Out.ar(0,sig1a);Out.ar(0,sig1b);
-	Out.ar(0,sig2a);Out.ar(0,sig2b);
+sig2=FreeVerb.ar(BPF.ar
+			(PlayBuf.ar(4, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 0, doneAction:0),
+				freq:pass2.lag(0.333),rq:width2.lag(0.333),mul:gain2.lag(0.333)),
+			mix:mix2.lag(0.333),room:1,mul:1/width2.sqrt);
+
+	Out.ar(0,sig1);Out.ar(0,sig2);
 
 }).add;
 (
@@ -55,8 +59,8 @@ w=Window.new("gui",Rect.new(750,100,500,420)).front.alwaysOnTop_(true);
 	if(
 		obj.value==1,{~synth=Synth.new(\inst4,[
 \gain1,~gain1.value,\gain2,~gain2.value,\mix1,~reverb1.value,\mix2,~reverb2.value,
-\lowpass1,~filter1.y.linexp(0,1,20,20000),\highpass1,~filter1.x.linexp(0,1,20,20000),
-	\lowpass2,~filter2.y.linexp(0,1,20,20000),\highpass2,~filter2.x.linexp(0,1,20,20000)]).register;},
+\pass1,~filter1.y.linexp(0,1,20,20000),\width1,~filter1.x.linexp(0,1,0.0001,1),
+	\pass2,~filter2.y.linexp(0,1,20,20000),\width2,~filter2.x.linexp(0,1,0.0001,1)]).register;},
 		{~synth.free}
 )});
 (
@@ -114,27 +118,30 @@ f.string = "reverb2";
 (
 ~filter1.x_(0).y_(0).action_({
 	arg obj;
-	var lowpass,highpass;
-	lowpass=obj.y.linexp(0,1,20,20000);
-	highpass=obj.x.linexp(0,1,20,20000);
-	[lowpass.value,highpass.value].postln;
-	if(~synth.isPlaying,{~synth.set(\lowpass1,lowpass,\highpass1,highpass)});
+	var pass,width;
+	pass=obj.y.linexp(0,1,20,20000);
+	width=obj.x.linexp(0,1,0.0001,1);
+	["pass2","widht2"].postln;
+	[pass.value,width.value].postln;
+	if(~synth.isPlaying,{~synth.set(\pass1,pass,\width1,width)});
 });
 );
 (
 ~filter2.x_(0).y_(0).action_({
 	arg obj;
-	var lowpass,highpass;
-	lowpass=obj.y.linexp(0,1,20,20000);
-	highpass=obj.x.linexp(0,1,20,20000);
-	[lowpass.value,highpass.value].postln;
-	if(~synth.isPlaying,{~synth.set(\lowpass2,lowpass,\highpass2,highpass)});
+	var pass,width;
+	pass=obj.y.linexp(0,1,20,20000);
+	width=obj.x.linexp(0,1,0.0001,1);
+	["pass2","widht2"].postln;
+	[pass.value,width.value].postln;
+	if(~synth.isPlaying,{~synth.set(\pass2,pass,\width2,width)});
 });
 );
 
 )
 s.record(numChannels:4)
 
+/////use joysticks for slider 2d and slider pots or normal pots for gain and reverb, a tact switch can be the on/off button
 (
 MIDIClient.init;
 MIDIIn.connectAll;
