@@ -91,8 +91,8 @@ sig6=FreeVerb.ar(BPF.ar
 
 
 	Out.ar(0,sig1);
-		//Out.ar(0,sig2);Out.ar(0,sig3);
-//Out.ar(0,sig4);Out.ar(0,sig5);Out.ar(0,sig6);
+Out.ar(0,sig2);Out.ar(0,sig3);
+Out.ar(0,sig4);Out.ar(0,sig5);Out.ar(0,sig6);
 
 }).add;);
 (
@@ -117,8 +117,8 @@ w=Window.new("gui",Rect.new(750,100,500,420)).front.alwaysOnTop_(true);
 	if(
 		obj.value==1,{~synth=Synth.new(\inst4,[
 \gain1,~gain1.value,\gain2,~gain2.value,\mix1,~reverb1.value,\mix2,~reverb2.value,
-\cutt1,~filter1.x.linlin(0,1,0,180),\band1,~filter1.y.linlin(0,1,0,180),
-	\cutt2,~filter2.x.linlin(0,1,0,180),\band2,~filter2.y.linlin(0,1,0,180)]).register;},
+\cutt1,~filter1.x.linlin(0,1,180.neg,180),\band1,~filter1.y.linlin(0,1,180.neg,180),
+	\cutt2,~filter2.x.linlin(0,1,180.neg,180),\band2,~filter2.y.linlin(0,1,180.neg,180)]).register;},
 		{~synth.free}
 )});
 (
@@ -177,10 +177,10 @@ f.string = "reverb2";
 ~filter1.x_(0).y_(0).action_({
 	arg obj;
 	var pass,width;
-	pass=obj.x.linlin(0,1,0,180);
-	width=obj.y.linlin(0,1,0,180);
-	//["pass1","widht1"].postln;
-	//[pass.value,width.value].postln;
+	pass=obj.x.linlin(0,1,180.neg,180);
+	width=obj.y.linlin(0,1,180.neg,180);
+	["pass1","widht1"].postln;
+	[pass.value,width.value].postln;
 	if(~synth.isPlaying,{~synth.set(\cutt1,pass,\band1,width)});
 });
 );
@@ -188,10 +188,10 @@ f.string = "reverb2";
 ~filter2.x_(0).y_(0).action_({
 	arg obj;
 	var pass,width;
-    pass=obj.x.linlin(0,1,0,180);
-	width=obj.y.linlin(0,1,0,180);
-	//["pass2","widht2"].postln;
-	//[pass.value,width.value].postln;
+    pass=obj.x.linlin(0,1,180.neg,180);
+	width=obj.y.linlin(0,1,180.neg,180);
+	["pass2","widht2"].postln;
+	[pass.value,width.value].postln;
 	if(~synth.isPlaying,{~synth.set(\cutt2,pass,\band2,width)});
 });
 )
