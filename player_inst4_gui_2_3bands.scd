@@ -14,8 +14,8 @@ s.waitForBoot
 Buffer.freeAll
 
 (
-~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Desktop/PROJECT  FILES/uni/ksyme/askhsh1/stereo 3d buf_voices_ksyme.wav");
-~c2 = Buffer.read(s,"/Users/petrostatsiopoulos/Desktop/PROJECT  FILES/uni/ksyme/askhsh1/askhsh1.wav");
+~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Desktop/PROJECT  FILES/recordings/amimid 081027_fort roupel/black pint:rosewood/jam me tsikrjohn session1/edit1/track1.wav");
+~c2 = Buffer.read(s,"/Users/petrostatsiopoulos/Desktop/PROJECT  FILES/recordings/amimid 081027_fort roupel/black pint:rosewood/jam me tsikrjohn session1/edit1/track1.wav");
 )
 
 (
@@ -46,13 +46,13 @@ SynthDef.new(\inst4,
 		cuttfreq2=Spherical(1,az3,el3);
 		bandwidth2=Spherical(1,az4,el4);
 
-		pass1=cuttfreq1.x.round(0.00001).abs.linlin(0,1,20,20000).poll;
+		pass1=cuttfreq1.x.round(0.00001).abs.linlin(0,1,20,20000);
 		pass2=cuttfreq1.y.round(0.00001).abs.linlin(0,1,20,20000);
 		pass3=cuttfreq1.z.round(0.00001).abs.linlin(0,1,20,20000);
 		pass4=cuttfreq2.x.round(0.00001).abs.linlin(0,1,20,20000);
 		pass5=cuttfreq2.y.round(0.00001).abs.linlin(0,1,20,20000);
 		pass6=cuttfreq2.z.round(0.00001).abs.linlin(0,1,20,20000);
-		width1=bandwidth1.x.round(0.00001).abs.linlin(0,1,0.0001,1).poll;
+		width1=bandwidth1.x.round(0.00001).abs.linlin(0,1,0.0001,1);
 		width2=bandwidth1.y.round(0.00001).abs.linlin(0,1,0.0001,1);
 		width3=bandwidth1.z.round(0.00001).abs.linlin(0,1,0.0001,1);
 		width4=bandwidth2.x.round(0.00001).abs.linlin(0,1,0.0001,1);
@@ -67,7 +67,7 @@ sig1=FreeVerb.ar(BPF.ar
 
 sig2=FreeVerb.ar(BPF.ar
 			(PlayBuf.ar(2, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: inf, doneAction:2),
-				freq:pass2,rq:width2,mul:gain2),
+				freq:pass2,rq:width2,mul:gain1),
 			mix:mix2,room:1,mul:1/width2.sqrt);
 sig3=FreeVerb.ar(BPF.ar
 			(PlayBuf.ar(2, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: inf, doneAction:2),
@@ -81,7 +81,7 @@ sig4=FreeVerb.ar(BPF.ar
 
 sig5=FreeVerb.ar(BPF.ar
 			(PlayBuf.ar(2, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: inf, doneAction:2),
-				freq:pass5,rq:width5,mul:gain1),
+				freq:pass5,rq:width5,mul:gain2),
 			mix:mix1,room:1,mul:1/width5.sqrt);
 
 sig6=FreeVerb.ar(BPF.ar
@@ -90,9 +90,8 @@ sig6=FreeVerb.ar(BPF.ar
 			mix:mix2,room:1,mul:1/width6.sqrt);
 
 
-	Out.ar(0,sig1);
-Out.ar(0,sig2);Out.ar(0,sig3);
-Out.ar(0,sig4);Out.ar(0,sig5);Out.ar(0,sig6);
+	Out.ar(0,sig1);Out.ar(0,sig2);Out.ar(0,sig3);
+//Out.ar(0,sig4);Out.ar(0,sig5);Out.ar(0,sig6);
 
 }).add;);
 (
