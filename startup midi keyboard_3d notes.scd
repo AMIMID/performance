@@ -241,14 +241,14 @@ var phase,angle=0,mag,phase1,angle1=0,mag1,m=6,pl1=0,pl2=0;
 (
 SynthDef.new(\synhtone,
 {
-arg speed=1,octave=4,gate=0,rot_angle=0;
+arg speed=1,octave=4,gate=0,rot_angle=0,mult=24,n=0;
 var signal1,signal2,env,pl=0,m=1,freq1,freq2,amp1,amp2,amp3;
-var pos1,pos2,phase1,phase2,ph1,ph2,mag,fundamental=64,freq;
-var chainx,chainy,amp,rq=1,cutt,f,pl1=0,pl2=0,bank1=2,bank2=8;
+var pos1,pos2,phase1,phase2,ph1,ph2,mag,fundamental=32,freq;
+var chainx,chainy,amp,rq=1,cutt,f,pl1=0,pl2=0,bank1=2,bank2=4;
 var n1,n2,n3;
 var sig1,sig2,sig3,sig4,sig5,sig6;
 var v,i,j,k,q;
-var pitch1, pitch2, pitch3,pitch;
+var pitch1, pitch2, pitch3,pitch,ton;
 var xyz,xyz_array,axis;
 
 	var wrappedOut1 = { |busArray, signalArray|
@@ -271,6 +271,10 @@ var xyz,xyz_array,axis;
 		Out.ar(pair[0], pair[1])}};
 	var out = NamedControl.kr(\out, [0, 1]);  // multiple buses!
 
+				ton=2.pow(n/12);
+
+		freq=fundamental*octave*speed.reciprocal;
+				env=EnvGen.ar(Env.perc(0.02,4),doneAction:2);
 
 bank1.do{
 bank2.do{
@@ -285,7 +289,7 @@ bank2.do{
 		//ph2=SinOsc.ar(mag.reciprocal,phase2,mag);
 		mag=mag.round(0.0000000001);
 
-		xyz=Spherical(1,mag.theta.wrap(pi.neg,pi),mag.theta.wrap((pi/2).neg,(pi/2)));
+						xyz=Spherical(1,mag.theta.wrap(pi.neg,pi),mag.theta.wrap((pi/2).neg,(pi/2)));
 		xyz_array=[xyz.x.round(0.000001),xyz.y.round(0.000001),xyz.z.round(0.000001)];
 
 	v=Quaternion(0,0,0,1);
@@ -298,42 +302,45 @@ v=q*v*q.conjugate;
 
 	pitch=Cartesian(v.b,v.c,v.d);
 
-	n1=(pitch.x*20).round(1); n2=(pitch.y*20).round(1); n3=(pitch.z*20).round(1);
+	n1=(pitch.x*mult).round(1); n2=(pitch.y*mult).round(1); n3=(pitch.z*mult).round(1);
 
 		pitch1=2.pow(n1/12);
 		pitch2=2.pow(n2/12);
 		pitch3=2.pow(n3/12);
 
-		freq=fundamental*octave*speed.reciprocal;
 
 
 		ph1=exp(Complex(0,1)*(2pi*mag.real).mod(2pi)).theta;
 		ph2=exp(Complex(0,1)*(2pi*mag.imag).mod(2pi)).theta;
 
-		amp1=m.reciprocal*octave.reciprocal*speed*pitch1.reciprocal;
-		amp2=m.reciprocal*octave.reciprocal*speed*pitch2.reciprocal;
-		amp3=m.reciprocal*octave.reciprocal*speed*pitch3.reciprocal;
+		amp1=m.reciprocal*octave.reciprocal*speed*pitch1.reciprocal*ton.reciprocal;
+		amp2=m.reciprocal*octave.reciprocal*speed*pitch2.reciprocal*ton.reciprocal;
+		amp3=m.reciprocal*octave.reciprocal*speed*pitch3.reciprocal*ton.reciprocal;
 
-		f=freq*m;
+		f=freq*m*ton;
 
-		cutt=freq*m;
-
-env=EnvGen.ar(Env.perc(0.02,4),doneAction:2);
+		cutt=freq*m*ton;
 
 				sig1=LPF.ar(Osc.ar(~t.bufnum,f*pitch1,ph1,amp1),cutt*pitch1,env);
-				sig2=LPF.ar(Osc.ar(~t.bufnum,f*pitch2,ph1,amp2),cutt*pitch2,env);
-				sig3=LPF.ar(Osc.ar(~t.bufnum,f*pitch3,ph1,amp3),cutt*pitch1,env);
+				sig2=LPF.ar(Osc.ar(~t.bufnum,f*pitch2,ph1,amp2),cutt*pitch1,env);
+				sig3=LPF.ar(Osc.ar(~t.bufnum,f*pitch3,ph1,amp3),cutt*pitch3,env);
 				sig4=LPF.ar(Osc.ar(~t.bufnum,f*pitch1,ph2,amp1),cutt*pitch1,env);
 				sig5=LPF.ar(Osc.ar(~t.bufnum,f*pitch2,ph2,amp2),cutt*pitch2,env);
-				sig6=LPF.ar(Osc.ar(~t.bufnum,f*pitch3,ph2,amp3),cutt*pitch1,env);
+				sig6=LPF.ar(Osc.ar(~t.bufnum,f*pitch3,ph2,amp3),cutt*pitch3,env);
 	m=m+1;
 
-		wrappedOut1.value(out,Pan2.ar(LeakDC.ar(sig1),pos1,mag.rho/(2.sqrt)));
-		wrappedOut2.value(out,Pan2.ar(LeakDC.ar(sig2),pos1,mag.rho/(2.sqrt)));
-		wrappedOut3.value(out,Pan2.ar(LeakDC.ar(sig3),pos1,mag.rho/(2.sqrt)));
-		wrappedOut4.value(out,Pan2.ar(LeakDC.ar(sig4),pos2,mag.rho/(2.sqrt)));
-		wrappedOut5.value(out,Pan2.ar(LeakDC.ar(sig5),pos2,mag.rho/(2.sqrt)));
-		wrappedOut6.value(out,Pan2.ar(LeakDC.ar(sig6),pos2,mag.rho/(2.sqrt)));
+		//wrappedOut1.value(out,Pan2.ar(LeakDC.ar(sig1),pos1,mag.rho/(2.sqrt)));
+		//wrappedOut2.value(out,Pan2.ar(LeakDC.ar(sig2),pos1,mag.rho/(2.sqrt)));
+		//wrappedOut3.value(out,Pan2.ar(LeakDC.ar(sig3),pos1,mag.rho/(2.sqrt)));
+		//wrappedOut4.value(out,Pan2.ar(LeakDC.ar(sig4),pos2,mag.rho/(2.sqrt)));
+		//wrappedOut5.value(out,Pan2.ar(LeakDC.ar(sig5),pos2,mag.rho/(2.sqrt)));
+		//wrappedOut6.value(out,Pan2.ar(LeakDC.ar(sig6),pos2,mag.rho/(2.sqrt)));
+						Out.ar(0,Pan2.ar(LeakDC.ar(sig1),pos1));
+						Out.ar(0,Pan2.ar(LeakDC.ar(sig2),pos1));
+						Out.ar(0,Pan2.ar(LeakDC.ar(sig3),pos1));
+						Out.ar(0,Pan2.ar(LeakDC.ar(sig4),pos2));
+						Out.ar(0,Pan2.ar(LeakDC.ar(sig5),pos2));
+						Out.ar(0,Pan2.ar(LeakDC.ar(sig6),pos2));
 
 pl1=pl1+1;
 			};
@@ -341,34 +348,32 @@ pl1=pl1+1;
 		m=m+1;
 }
 }).add;
-)
-///args to define in midi: octave,decay,speed// octave is set by keyboard, speed has to be toggle switch, decay a potentiometer//// further parameters can be set with BPF through joystick, also joystick can be used in the play_gui file in midi
+);
+///midi
 (
 MIDIClient.init;
 MIDIIn.connectAll;
+~angle=0;
 
-/*MIDIdef.noteOn(\note, { |val, num, chan, src|
+MIDIdef.noteOn(\note, { |val, num, chan, src|
 	[val, num, chan, src].postln;
-	if(num < 61) {
+	if(num < 72) {
 		num = num - 1
 	};
-	~a=Synth(\synhtone, [nx: num - 60 ,ny: num - 60, out1: [(0..1).rotate(2.rand)], gate:1]);
-			(2).wait;
-			~a.set(\gate,0)
+	~a=Synth(\synhtone, [n: num - 72, rot_angle: ~angle.linlin(0,127,360.neg,360).round(1), out: [(0..1).rotate(2.rand)]]);
 
-}, noteNum: (36..96));*/
+}, noteNum: (36..96));
 	(
 MIDIdef.cc(\midi1,{ |val, num, chan, src|
 		var angle;
 	//[val, num, chan, src].postln;
-	angle=val.linlin(0,127,180.neg,180);
+				~angle=val;
+				angle=val.linlin(0,127,360.neg,360).round(1);
 		angle.postln;
-		~a=Synth(\synhtone, [nx: num - 60 ,ny: num - 60, out1: [(0..1).rotate(2.rand)]]);
-		if(~a.isPlaying,{~a.set(\rot_angle,angle)});
+				~a.set(\rot_angle,angle);
 },20);
 
 	);
-
 )
 }
 )
